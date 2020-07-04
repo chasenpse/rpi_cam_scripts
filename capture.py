@@ -27,7 +27,7 @@ while flip not in ['y','n']:
         break
 
 # Define file path & part of file name
-file = "/home/pi/Pictures/{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+file = "~/Pictures/{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
 
 if flip == 'y':
     os.system("raspistill -w {} -h {} -o {}.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n".format(imgWidth, imgHeight, file))

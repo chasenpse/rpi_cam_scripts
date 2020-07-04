@@ -19,7 +19,7 @@ initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
 
 # Define the save dir
-savepath = "/home/pi/Pictures/Timelapses/lapse_{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+savepath = "~/Pictures/Timelapses/lapse_{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
 os.mkdir(savepath)
 
 # Define image capture size & frequency
