@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Import some frameworks
+# Import libraries
 import os
 import time
 import RPi.GPIO as GPIO
@@ -11,24 +11,38 @@ from datetime import datetime
 
 # Get current date/time for creating folders
 d = datetime.now()
-initYear = "%04d" % (d.year) 
-initMonth = "%02d" % (d.month) 
+initYear = "%04d" % (d.year)
+initMonth = "%02d" % (d.month)
 initDay = "%02d" % (d.day)
 initHour = "%02d" % (d.hour)
 initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
 
-# Define the save directory
-# If apache is running you can set this to /var/www/ to make
-# them accessible via web browser.
-folderToSave = "/var/www/html/timelapses/lapse_" + str(initYear) + str(initMonth) + str(initDay) + "-" + str(initHour) + str(initMins) + str(initSecs)
-os.mkdir(folderToSave)
+# Define the save dir
+savepath = "/home/pi/Pictures/Timelapses/lapse_{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+os.mkdir(savepath)
 
 # Define image capture size & frequency
 imgWidth = 1280  # Max = 2592
 imgHeight = 720  # Max = 1944
-imgRate = 6000   # in milliseconds, Min ~ 200
 
-#86400000 = 24 hours / 6 zeros
-#3600000 = 1 hour / 5 zeros
-os.system("raspistill -t 28800000 -tl " + str(imgRate) + " -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + str(folderToSave) + "/" + str("%06d") + ".jpg -vf -hf  -sh 40 -awb auto -mm average -v -n")
+while True:
+    try:
+        captureRate = int(raw_input("Enter capture rate (ms): ")) # in milliseconds, Min ~ 200
+        captureTime = int(raw_input("Enter timelapse capture length (min): ")) * 60000 # 1 hour = 3600000, 24 hours = 86400000
+    except ValueError:
+        print("Please provide a whole integer.")
+        continue
+    else:
+        break
+
+flip = None
+while flip not in ['y','n']:
+    flip = raw_input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
+    if flip in ['y','n']:
+        break
+
+if flip == 'y':
+    os.system("raspistill -t {} -tl {} -w {} -h {} -o {}/%06d.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n".format(captureTime,captureRate,imgWidth,imgHeight,savepath))
+else:
+    os.system("raspistill -t {} -tl {} -w {} -h {} -o {}/%06d.jpg -sh 40 -q 60 -awb auto -v -n".format(captureTime,captureRate,imgWidth,imgHeight,savepath))

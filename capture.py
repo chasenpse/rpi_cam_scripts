@@ -6,14 +6,9 @@ import time
 import RPi.GPIO as GPIO
 from datetime import datetime
 
-# Define the save directory
-# If apache is running you can set this to /var/www/ to make
-# them accessible via web browser.
-folderToSave = "/var/www/html/pics"
-
-# Define image capture size & frequency
+# Define image capture size, max WxH is 2048x1536
 imgWidth = 2048
-imgHeight = 1536
+imgHeight = 1152
 
 # Get current date/time for creating folders
 d = datetime.now()
@@ -24,4 +19,17 @@ initHour = "%02d" % (d.hour)
 initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
 
-os.system("raspistill -w " + str(imgWidth) + " -h " + str(imgHeight) + " -o " + str(folderToSave) + "/img_" + str(initYear) + str(initMonth) + str(initDay) + "-" + str(initHour) + str(initMins) + str(initSecs) + ".jpg -vf -hf  -sh 40 -awb auto -mm average -v -n")
+# Ask user if VF & HF should be applied
+flip = None
+while flip not in ['y','n']:
+    flip = raw_input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
+    if flip in ['y','n']:
+        break
+
+# Define file path & part of file name
+file = "/home/pi/Pictures/{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+
+if flip == 'y':
+    os.system("raspistill -w {} -h {} -o {}.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n".format(imgWidth, imgHeight, file))
+else:
+    os.system("raspistill -w {} -h {} -o {}.jpg -sh 40 -q 60 -awb auto -v -n".format(imgWidth, imgHeight, file))
