@@ -1,9 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Import libraries
 import os
-import time
-import RPi.GPIO as GPIO
 from datetime import datetime
 
 # Delay 60 seconds to avoid creating unnecessary files
@@ -19,7 +17,7 @@ initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
 
 # Define the save dir
-savepath = "~/Pictures/Timelapses/lapse_{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+savepath = os.path.expanduser(f"~/Pictures/Timelapses/lapse_{initYear}{initMonth}{initDay}-{initHour}{initMins}{initSecs}")
 os.mkdir(savepath)
 
 # Define image capture size & frequency
@@ -28,8 +26,8 @@ imgHeight = 720  # Max = 1944
 
 while True:
     try:
-        captureRate = int(raw_input("Enter capture rate (ms): ")) # in milliseconds, Min ~ 200
-        captureTime = int(raw_input("Enter timelapse capture length (min): ")) * 60000 # 1 hour = 3600000, 24 hours = 86400000
+        captureRate = int(input("Enter capture rate (ms): ")) # in milliseconds, Min ~ 200
+        captureTime = int(input("Enter timelapse capture length (min): ")) * 60000 # 1 hour = 3600000, 24 hours = 86400000
     except ValueError:
         print("Please provide a whole integer.")
         continue
@@ -38,11 +36,11 @@ while True:
 
 flip = None
 while flip not in ['y','n']:
-    flip = raw_input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
+    flip = input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
     if flip in ['y','n']:
         break
 
 if flip == 'y':
-    os.system("raspistill -t {} -tl {} -w {} -h {} -o {}/%06d.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n".format(captureTime,captureRate,imgWidth,imgHeight,savepath))
+    os.system(f"raspistill -t {captureTime} -tl {captureRate} -w {imgWidth} -h {imgHeight} -o {savepath}/%06d.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n")
 else:
-    os.system("raspistill -t {} -tl {} -w {} -h {} -o {}/%06d.jpg -sh 40 -q 60 -awb auto -v -n".format(captureTime,captureRate,imgWidth,imgHeight,savepath))
+    os.system(f"raspistill -t {captureTime} -tl {captureRate} -w {imgWidth} -h {imgHeight} -o {savepath}/%06d.jpg -sh 40 -q 60 -awb auto -v -n")

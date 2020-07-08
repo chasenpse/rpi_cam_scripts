@@ -1,9 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Import some frameworks
 import os
-import time
-import RPi.GPIO as GPIO
 from datetime import datetime
 
 # Define image capture size, max WxH is 2048x1536
@@ -22,14 +20,14 @@ initSecs = "%02d" % (d.second)
 # Ask user if VF & HF should be applied
 flip = None
 while flip not in ['y','n']:
-    flip = raw_input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
+    flip = input("Apply VF & HF? (Hint: if cable connection is on bottm = N, top = Y) [y/n]: ").lower()
     if flip in ['y','n']:
         break
 
 # Define file path & part of file name
-file = "~/Pictures/{}{}{}-{}{}{}".format(initYear,initMonth,initDay,initHour,initMins,initSecs)
+file = os.path.expanduser(f"~/Pictures/{initYear}{initMonth}{initDay}-{initHour}{initMins}{initSecs}")
 
 if flip == 'y':
-    os.system("raspistill -w {} -h {} -o {}.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n".format(imgWidth, imgHeight, file))
+    os.system(f"raspistill -w {imgWidth} -h {imgHeight} -o {file}.jpg -vf -hf -sh 40 -q 60 -awb auto -v -n")
 else:
-    os.system("raspistill -w {} -h {} -o {}.jpg -sh 40 -q 60 -awb auto -v -n".format(imgWidth, imgHeight, file))
+    os.system(f"raspistill -w {imgWidth} -h {imgHeight} -o {file}.jpg -sh 40 -q 60 -awb auto -v -n")
