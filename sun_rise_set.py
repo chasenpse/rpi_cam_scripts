@@ -52,10 +52,9 @@ while True:
     while True:
 
         timenow = tzone.localize(datetime.datetime.now())
-        print("in main while loop")
         
         if timenow.strftime("%H:%M:%S") == sr_startTime.strftime("%H:%M:%S"):
-            print("in sunrise loop")
+
             # Get current date/time for creating folders
             d = datetime.datetime.now()
             initYear = "%04d" % (d.year)
@@ -74,7 +73,7 @@ while True:
             break
 
         elif timenow.strftime("%H:%M:%S") == ss_startTime.strftime("%H:%M:%S"):
-            print("in sunset loop")
+            
             # Get current date/time for creating folders
             d = datetime.datetime.now()
             initYear = "%04d" % (d.year)
