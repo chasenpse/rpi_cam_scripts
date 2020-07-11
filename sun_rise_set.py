@@ -69,7 +69,7 @@ while True:
             os.mkdir(savepath)
 
             # Run raspistill
-            os.system(f"raspistill -t {sr_timelapse_runtime.seconds} -tl 2000 -w 1280 -h 720 -o {savepath}/%06d.jpg -vf -hf -sh 40 -q 60 -v -n -awb sun")
+            os.system(f"raspistill -t {sr_timelapse_runtime.seconds * 1000} -tl 2000 -w 1280 -h 720 -o {savepath}/%06d.jpg -vf -hf -sh 40 -q 60 -v -n -awb sun")
             break
 
         elif timenow.strftime("%H:%M:%S") == ss_startTime.strftime("%H:%M:%S"):
@@ -88,5 +88,5 @@ while True:
             os.mkdir(savepath)
 
             # Run raspistill
-            os.system(f"raspistill -t {ss_timelapse_runtime.seconds} -tl 2000 -w 1280 -h 720 -o {savepath}/%06d.jpg -vf -hf -sh 40 -q 60 -v -n -awb sun")
+            os.system(f"raspistill -t {ss_timelapse_runtime.seconds * 1000} -tl 2000 -w 1280 -h 720 -o {savepath}/%06d.jpg -vf -hf -sh 40 -q 60 -v -n -awb sun")
             break
